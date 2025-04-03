@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game details</title>
+</head>
+<body>
+    <h2>{{ game.title }}</h2>
+    <img src="{{ game.image.url }} " width="100" height="100" alt="{{ game.title }}">
+        <details>
+            <summary>Description</summary>
+            <p>{{ game.description }}</p>
+        </details>
+    <p>Price: {{ game.price }}</p>
+    <p>Rating: {{ game.rating }}</p>
+    <p>Reviews: {{ game.review }}</p>
+     
+    <form action="{% url 'cart_add' game.id %}">
+        <button type="submit">Buy</button>
+    </form>
+</body>
+</html>
