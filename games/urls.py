@@ -12,3 +12,6 @@ urlpatterns = [
     path('cart/add/<int:game_id>/', cart_add, name='cart_add'),
     path('cart/remove/<int:game_id>/', cart_remove, name='cart_remove'),
     path('cart/update_quantity/<int:game_id>/', cart_update_quantity, name="cart_update_quantity")]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
