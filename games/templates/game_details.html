@@ -12,12 +12,17 @@
             <summary>Description</summary>
             <p>{{ game.description }}</p>
         </details>
+    <p>In stock: {{ game.count }}</p>
     <p>Price: {{ game.price }}</p>
     <p>Rating: {{ game.rating }}</p>
     <p>Reviews: {{ game.review }}</p>
      
     <form action="{% url 'cart_add' game.id %}">
         <button type="submit">Buy</button>
+    </form>
+
+    <form action="/games_review">
+        <button type="submit">Back to shop.</button>
     </form>
 </body>
 </html>

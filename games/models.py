@@ -28,3 +28,7 @@ class Order(models.Model):
     country = models.CharField(max_length=100, default='default')
     city = models.CharField(max_length=100, default='default')
     address = models.CharField(max_length=100, default='default')
+
+class Favorite(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    game = models.ForeignKey(Game, on_delete=models.CASCADE)

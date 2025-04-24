@@ -6,15 +6,64 @@
     <title>Document</title>
 </head>
 <body>
+    {% load static %}
+    {% if user.is_authenticated %}
+        Hi, {{ user.username }}! <a href="{% url 'profile' %}">Profile</a> 
+        <form method="post" action="{% url 'logout' %}">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>  <a href="{% url 'cart_detail' %}">Cart</a>
+
+    {% else %}
+        <a href="{% url 'login' %}">Login</a> <a href="{% url 'register' %}">Register</a>
+    {% endif %}
+
     <h2>Наши игры</h2>
-    <a href="/cart">Cart</a>
         <div class="games">
             {% for game in games %}
                 <img src="{{ game.image.url }}" alt="{{ game.title }}" width="150" height="150">
                 <h3>{{ game.title }}</h3>
                 <p>Цена: {{ game.price }}</p>
                 <a href="{% url 'game_details' game.id %}">Подробнее</a>
+                <button class="favorite-btn" data-game-id="{{ game.id }}">
+                    <span>
+                        {% if game.id in favorites %}❤️{% else %}🤍{% endif %}
+                    </span>
+                </button>
             {% endfor %}
         </div>
 </body>
 </html>
+
+<script>
+   document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll('.favorite-btn').forEach(button => {
+        button.addEventListener('click', function (e) {
+            e.preventDefault();
+
+            const gameId = this.dataset.gameId;
+
+            fetch(`/favorite_add/${gameId}/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}',
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+
+                const heart = button.querySelector('span');
+                if (data.is_favorite){
+                    heart.textContent = '❤️';
+                }else{
+                    heart.textContent = '🤍';
+                }
+            })
+            .catch(error=>{
+                console.error('Ошибка при добавлении в избранное: ', error);
+            });
+        });
+    });
+});
+</script>

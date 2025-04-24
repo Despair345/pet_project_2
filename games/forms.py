@@ -15,7 +15,7 @@ class OrderForm(forms.ModelForm):
         model = Order
         fields = [
             "user",
-            "games",
+            #"games", #is this correct?
             "count",
             "total_price",
             "country",
