@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Admin Panel</h1>
+    {% if perms.app.can_add_game %}
+        <h2>You can add games</h2>
+    {% else %}
+        <h2>You cannot add games</h2>
+    {% endif %}
+
+    {% if perms.app.can_delete_game %}
+        <h2>You can delete games</h2>
+    {% else %}
+        <h2>You cannot delete games</h2>
+    {% endif %}
+
+    {% if perms.app.can_edit_game %}
+        <h2>You can edit games</h2>
+    {% else %}
+        <h2>You cannot edit games</h2>
+    {% endif %}
+</body>
+</html>
+    
+</body>
+</html>

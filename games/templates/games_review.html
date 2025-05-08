@@ -1,69 +1,44 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Наши игры</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
+<body class="bg-gray-900 text-white min-h-screen p-6">
     {% load static %}
-    {% if user.is_authenticated %}
-        Hi, {{ user.username }}! <a href="{% url 'profile' %}">Profile</a> 
-        <form method="post" action="{% url 'logout' %}">
-            {% csrf_token %}
-            <button type="submit">Logout</button>
-        </form>  <a href="{% url 'cart_detail' %}">Cart</a>
 
-    {% else %}
-        <a href="{% url 'login' %}">Login</a> <a href="{% url 'register' %}">Register</a>
-    {% endif %}
-
-    <h2>Наши игры</h2>
-        <div class="games">
-            {% for game in games %}
-                <img src="{{ game.image.url }}" alt="{{ game.title }}" width="150" height="150">
-                <h3>{{ game.title }}</h3>
-                <p>Цена: {{ game.price }}</p>
-                <a href="{% url 'game_details' game.id %}">Подробнее</a>
-                <button class="favorite-btn" data-game-id="{{ game.id }}">
-                    <span>
-                        {% if game.id in favorites %}❤️{% else %}🤍{% endif %}
-                    </span>
-                </button>
-            {% endfor %}
+    <!-- Навбар -->
+    <div class="flex justify-between items-center mb-6">
+        <div>
+            {% if user.is_authenticated %}
+                <span class="mr-4">Hi, {{ user.username }}!</span>
+                <a href="{% url 'profile' %}" class="text-blue-400 hover:underline mr-2">Profile</a>
+                <a href="{% url 'logout' %}" class="text-red-400 hover:underline">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="text-green-400 hover:underline mr-2">Login</a>
+                <a href="{% url 'register' %}" class="text-blue-400 hover:underline">Register</a>
+            {% endif %}
         </div>
+        <a href="/cart" class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded text-white">🛒 Cart</a>
+    </div>
+
+    <!-- Заголовок -->
+    <h2 class="text-3xl font-bold mb-6">Наши игры</h2>
+
+    <!-- Сетка игр -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {% for game in games %}
+        <div class="bg-gray-800 p-4 rounded-lg shadow-lg text-center">
+            <img src="{{ game.image.url }}" alt="{{ game.title }}" class="w-full h-40 object-cover rounded mb-3">
+            <h3 class="text-xl font-semibold mb-2">{{ game.title }}</h3>
+            <p class="mb-2">💵 Цена: {{ game.price }} $</p>
+            <a href="{% url 'game_details' game.id %}" class="inline-block mt-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
+                Подробнее
+            </a>
+        </div>
+        {% endfor %}
+    </div>
 </body>
 </html>
-
-<script>
-   document.addEventListener("DOMContentLoaded", function () {
-    document.querySelectorAll('.favorite-btn').forEach(button => {
-        button.addEventListener('click', function (e) {
-            e.preventDefault();
-
-            const gameId = this.dataset.gameId;
-
-            fetch(`/favorite_add/${gameId}/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': '{{ csrf_token }}',
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-
-                const heart = button.querySelector('span');
-                if (data.is_favorite){
-                    heart.textContent = '❤️';
-                }else{
-                    heart.textContent = '🤍';
-                }
-            })
-            .catch(error=>{
-                console.error('Ошибка при добавлении в избранное: ', error);
-            });
-        });
-    });
-});
-</script>

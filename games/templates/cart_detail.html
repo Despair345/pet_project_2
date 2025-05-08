@@ -1,79 +1,85 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cart</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-    <h2>Your cart</h2>
+<body class="bg-gray-900 text-white min-h-screen p-8">
+    <div class="max-w-4xl mx-auto">
+        <h2 class="text-3xl font-bold mb-6">Your cart</h2>
 
-    {% if cart %}
-        <table>
-            <tr>
-                <th>Title</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Total price</th>
-            </tr>
-            {% for item in cart %}
-            <tr>
-                <td>{{ item.title }}</td>
-                <td>{{ item.price }} $</td>
-                <td>
-                    <form class = "update-quantity-form" method="post" data-game-id="{{ item.game.id }}" action="{% url 'cart_update_quantity' item.game.id %}">
-                        {% csrf_token %}
-                        <input type="number" name = "quantity" value="{{ item.quantity }}" min="1" class = "quantity-input">
-                        <button type="submit" class="update-quantity-btn">Update</button>
-                    </form>
-                </td>
-                <td class="total-price-{{ item.game.id }}">{{ item.total_price }} $</td>
-                <td>
-                    <form action="{% url 'cart_remove' item.game.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit">Remove</button>
-                    </form>
-                </td>
-            </tr>
-            {% endfor %}
-        </table>
+        {% if cart %}
+            <table class="w-full border-collapse mb-6">
+                <thead>
+                    <tr class="border-b border-gray-700 text-left">
+                        <th class="py-2 px-4">Title</th>
+                        <th class="py-2 px-4">Price</th>
+                        <th class="py-2 px-4">Quantity</th>
+                        <th class="py-2 px-4">Total price</th>
+                        <th class="py-2 px-4">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart %}
+                    <tr id="cart-item-{{ item.game.id }}" class="border-b border-gray-700">
+                        <td class="py-2 px-4">{{ item.title }}</td>
+                        <td class="py-2 px-4">{{ item.price }} $</td>
+                        <td class="py-2 px-4">
+                            <form class="update-quantity-form flex items-center gap-2" method="post" data-game-id="{{ item.game.id }}">
+                                {% csrf_token %}
+                                <input type="number" name="quantity" value="{{ item.quantity }}" min="1" class="quantity-input w-16 p-1 text-black rounded">
+                                <button type="submit" class="update-quantity-btn bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded">Update</button>
+                            </form>
+                        </td>
+                        <td class="py-2 px-4 total-price-{{ item.game.id }}">{{ item.total_price }} $</td>
+                        <td class="py-2 px-4">
+                            <form action="{% url 'cart_remove' item.game.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
 
-        <h3>Total: <span class="total_price">{{ cart.get_total_price }} $</span></h3>
+            <h3 class="text-xl font-semibold">Total: <span class="total-price">{{ cart.get_total_price }} $</span></h3>
+        {% else %}
+            <p class="text-gray-400">Your cart is empty.</p>
+        {% endif %}
 
-    {% else %}
-        <p>Your cart is empty.</p>
-    {% endif %}
-
-    <form action="/games_review">
-        <button type="submit">Back to shop.</button>
-    </form>
+        <form action="/games_review" class="mt-6">
+            <button type="submit" class="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded">Back to shop</button>
+        </form>
+    </div>
 </body>
 </html>
 
 <script>
     $(document).ready(function() {
-       
-       $('.update-quantity-form').submit(function(event) {
-           event.preventDefault(); 
-           var form = $(this);
-           var gameId = form.data('game-id');  
-           var quantity = form.find('.quantity-input').val();  
+        $('.update-quantity-form').submit(function(event) {
+            event.preventDefault();
+            var form = $(this);
+            var gameId = form.data('game-id');
+            var quantity = form.find('.quantity-input').val();
 
-           $.ajax({
-               url: '/cart/update/' + gameId + '/', 
-               method: 'POST',
-               data: {
-                   'quantity': quantity,
-                   'csrfmiddlewaretoken': form.find('[name="csrfmiddlewaretoken"]').val()
-               },
-               success: function(response) {
-     
-                   $('#cart-item-' + gameId).find('td:nth-child(3)').text(quantity);
-                   $('#cart-item-' + gameId).find('td:nth-child(4)').text(response.new_total_price + ' $');  
-                   $('.total-price').text(response.new_total_price + ' $');  
-               }
-           });
-       });
-   });
+            $.ajax({
+                url: '/cart/update/' + gameId + '/',
+                method: 'POST',
+                data: {
+                    'quantity': quantity,
+                    'csrfmiddlewaretoken': form.find('[name="csrfmiddlewaretoken"]').val()
+                },
+                success: function(response) {
+                    $('#cart-item-' + gameId).find('td:nth-child(3)').text(quantity);
+                    $('#cart-item-' + gameId).find('td:nth-child(4)').text(response.new_total_price + ' $');
+                    $('.total-price').text(response.new_total_price + ' $');
+                }
+            });
+        });
+    });
 </script>

@@ -5,7 +5,8 @@ from .models import Game, Order, Favorite
 from .forms import OrderForm, GameForm, SignUpForm
 from .cart import Cart
 from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth.models import Group
 from django.db import transaction
 
 @login_required
@@ -16,6 +17,26 @@ def profile(request):
         'orders': orders,
         'favorites': favorites,
     })
+
+def is_admin(user):
+    return user.groups.filter(name='Admin').exists()
+
+@login_required
+@user_passes_test(is_admin)
+def admin_dashboard(request):
+    return render(request, 'admin_dashboard.html')
+
+@login_required
+@user_passes_test(is_admin)
+def add_new_game(request):
+    if request.method == 'POST':
+        form = Game(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('games_list')
+    else:
+        form = GameForm()
+    return render(request, 'add_game.html', {'form': form})
 
 def favorite_add(request, game_id):
     if request.method == 'POST':
@@ -34,6 +55,8 @@ def register(request):
         form = SignUpForm(request.POST)
         if form.is_valid():
             user = form.save()
+            group = Group.objects.get(name="User")
+            user.groups.add(group)
             login(request, user)
             return redirect('home')
     else:
@@ -41,11 +64,15 @@ def register(request):
     return render(request, 'register.html', {'form': form})
 
 def index(request):
-    return render(request, 'home.html')
+    is_admin = request.user.groups.filter(name='Admin').exists()
+    return render(request, 'home.html', {'is_admin':is_admin})
 
 def games_review(request):
-    games = Game.objects.all()
-    favorites = Favorite.objects.filter(user=request.user).values_list('game_id', flat=True)
+    games = Game.objects.
+    if request.user.is_authenticated:
+        favorites = Favorite.objects.filter(user=request.user).values_list('game_id', flat=True)
+    else:
+        favorites = []
     return render(request, 'games_review.html', {'games': games, 'favorites':favorites})
 
 def order_review(request):

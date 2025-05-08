@@ -1,8 +1,43 @@
-<h2>Login</h2>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-</form>
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-900 text-white flex items-center justify-center min-h-screen p-6">
 
-<a href="{% url 'register' %}">Register</a>
+    <div class="bg-gray-800 p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 class="text-2xl font-bold mb-6 text-center">🔐 Login</h2>
+
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+
+            <div>
+                <label for="id_username" class="block mb-1 font-medium">Username</label>
+                <input type="text" name="username" id="id_username" required 
+                       class="w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <div>
+                <label for="id_password" class="block mb-1 font-medium">Password</label>
+                <input type="password" name="password" id="id_password" required 
+                       class="w-full px-4 py-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            </div>
+
+            <button type="submit" 
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded transition">
+                Войти
+            </button>
+        </form>
+
+        <div class="mt-4 text-center">
+            <p>Нет аккаунта? 
+                <a href="{% url 'register' %}" class="text-blue-400 hover:underline">Зарегистрироваться</a>
+            </p>
+        </div>
+    </div>
+
+</body>
+</html>

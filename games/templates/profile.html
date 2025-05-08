@@ -4,17 +4,4 @@
         <li>{{ order.games.title }} - {{ order.total_price }} $ ({{ order.status }})</li>
     {% endfor %}
 </ul>
-<h2>Избранные игры</h2>
-  {% if favorites %}
-    <ul>
-      {% for fav in favorites %}
-        <li>
-          <a href="{% url 'game_details' fav.game.id %}">{{ fav.game.title }}</a>
-        </li>
-      {% endfor %}
-    </ul>
-  {% else %}
-    <p>Вы пока ничего не добавили в избранное.</p>
-  {% endif %}
-  <a href="{% url 'games' %}">Back</a>
-<a href="{% url 'logout' %}">Logout</a>
+<a href="{% url 'games' %}">Выйти</a>
