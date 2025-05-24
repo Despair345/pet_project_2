@@ -4,37 +4,29 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Admin Panel</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<body>
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <h1>Admin Panel</h1>
-    {% if perms.app.can_add_game %}
-        <h2>You can add games</h2>
-    {% else %}
-        <h2>You cannot add games</h2>
-    {% endif %}
+<body class="bg-gray-900 text-white min-h-screen flex items-center justify-center">
 
-    {% if perms.app.can_delete_game %}
-        <h2>You can delete games</h2>
-    {% else %}
-        <h2>You cannot delete games</h2>
-    {% endif %}
+    <div class="bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-md text-center">
+        <h1 class="text-2xl font-bold mb-6">Admin Panel</h1>
 
-    {% if perms.app.can_edit_game %}
-        <h2>You can edit games</h2>
-    {% else %}
-        <h2>You cannot edit games</h2>
-    {% endif %}
-</body>
-</html>
-    
+        <div class="flex flex-col gap-4">
+            <a href="{% url 'game_add' %}" class="px-4 py-2 rounded border border-blue-400 text-blue-400 hover:bg-blue-400 hover:text-white transition">
+                ➕ Add Game
+            </a>
+            <a href="{% url 'assign_group' %}" class="px-4 py-2 rounded border border-green-400 text-green-400 hover:bg-green-400 hover:text-white transition">
+                👥 Assign Group
+            </a>
+            <a href="{% url 'game_remove' %}" class="px-4 py-2 rounded border border-red-400 text-red-400 hover:bg-red-400 hover:text-white transition">
+                ❌ Remove Game
+            </a>
+            <a href="{% url 'games' %}" class="px-4 py-2 rounded border border-white text-white hover:bg-white hover:text-gray-800 transition">
+                🛒 View Store
+            </a>
+        </div>
+    </div>
+
 </body>
 </html>
