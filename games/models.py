@@ -12,6 +12,14 @@ class Game(models.Model):
 
     def __str__(self):
         return self.title
+    
+    class Meta:
+        permissions = [
+            ("can_add_game", "Can add game"),
+            ("can_delete_game", "Can delete game"),
+            ("can_edit_game", "Can edit game"),
+        ]
+        
 
 class Order(models.Model):
     STATUS_CHOICES = (
