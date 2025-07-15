@@ -7,17 +7,7 @@
     <title>Admin Panel</title>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
-<<<<<<< HEAD
 <body class="bg-gray-900 text-white min-h-screen flex items-center justify-center">
-=======
-<body>
-    <h1>Admin Panel</h1>
-    {% if perms.app.can_add_game %}
-        <h2>You can add games</h2>
-    {% else %}
-        <h2>You cannot add games</h2>
-    {% endif %}
->>>>>>> 6979a85 (Update game model, views and template)
 
     <div class="bg-gray-800 p-8 rounded-xl shadow-lg w-full max-w-md text-center">
         <h1 class="text-2xl font-bold mb-6">Admin Panel</h1>
